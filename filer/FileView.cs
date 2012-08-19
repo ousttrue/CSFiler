@@ -19,23 +19,23 @@ namespace filer
             }
         }
 
-        private String path_;
+        private DirectoryInfo current_;
         public String Path
         {
-            get { return path_; }
+            get { return current_.FullName; }
             set
             {
-                path_ = value;
+                current_ = new DirectoryInfo(value);
                 NotifyPropertyChanged("Path");
-                files_ = new ObservableCollection<string>(
-                Directory.GetFileSystemEntries(path_).ToArray());
+                files_ = new ObservableCollection<FileSystemInfo>(
+                current_.GetFileSystemInfos().ToArray());
             }
         }
 
-        private ObservableCollection<String> files_ = new ObservableCollection<String>();
-        public ReadOnlyObservableCollection<String> Files
+        private ObservableCollection<FileSystemInfo> files_ = new ObservableCollection<FileSystemInfo>();
+        public ReadOnlyObservableCollection<FileSystemInfo> Files
         {
-            get { return new ReadOnlyObservableCollection<String>(files_); }
+            get { return new ReadOnlyObservableCollection<FileSystemInfo>(files_); }
         }
 
         public FileView(String path)
