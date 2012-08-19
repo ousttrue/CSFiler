@@ -22,6 +22,8 @@ namespace filer
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext=new FileView("C:\\");
         }
     }
 }

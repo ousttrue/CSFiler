@@ -3,6 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" Name="currentFolder" Text="{Binding Path=Path}" />
+        <ScrollViewer Grid.Row="1" >
+            <ListBox Name="currentFolderFiles" ItemsSource="{Binding Path=Files}" />
+        </ScrollViewer>
     </Grid>
 </Window>
