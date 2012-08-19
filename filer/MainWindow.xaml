@@ -1,8 +1,19 @@
 ﻿<Window x:Class="filer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:io="namespace:System.IO"
+        xmlns:IO="clr-namespace:System.IO;assembly=mscorlib"
         Title="Filer" Height="350" Width="525">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type IO:DirectoryInfo}">
+            <Label Content="{Binding Path=Name}"  Foreground="#FF2222"/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type IO:FileInfo}">
+            <StackPanel Orientation="Horizontal">
+                <Label Width="100" Content="{Binding Path=Name}"/>
+                <Label Width="100" Content="{Binding Path=Length}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -11,11 +22,6 @@
         <TextBox Grid.Row="0" Name="currentFolder" Text="{Binding Path=Path}" />
         <ScrollViewer Grid.Row="1" >
             <ListBox Name="currentFolderFiles" ItemsSource="{Binding Path=Files}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Label Content="{Binding Path=Name}"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
             </ListBox>
         </ScrollViewer>
     </Grid>
