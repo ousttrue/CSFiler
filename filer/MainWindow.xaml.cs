@@ -46,7 +46,7 @@ namespace filer
 
         }
 
-        private void goParent_Click(object sender, RoutedEventArgs e)
+        private void goParent_Click(object sender, RoutedEventArgs args)
         {
             if (fileView_.Current.Parent != null)
             {

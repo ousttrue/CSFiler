@@ -4,15 +4,10 @@
         xmlns:IO="clr-namespace:System.IO;assembly=mscorlib"
         Title="Filer" Height="350" Width="525">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type IO:DirectoryInfo}">
-            <Label Content="{Binding Path=Name}"  Foreground="#FF2222" Cursor="Hand"/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type IO:FileInfo}">
-            <StackPanel Orientation="Horizontal">
-                <Label Width="100" Content="{Binding Path=Name}"/>
-                <Label Width="100" Content="{Binding Path=Length}"/>
-            </StackPanel>
-        </DataTemplate>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <EventSetter Event="MouseDoubleClick" Handler="listBoxItem_DoubleClick"/>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -28,13 +23,28 @@
             <Button Grid.Column="1" Name="goParent" Width="30" Content=".." Click="goParent_Click" Cursor="Hand"/>
         </Grid>
         <ScrollViewer Grid.Row="1" >
-            <ListBox Name="currentFolderFiles" ItemsSource="{Binding Path=Files}" HorizontalContentAlignment="Stretch">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}">
-                        <EventSetter Event="MouseDoubleClick" Handler="listBoxItem_DoubleClick" />
-                    </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
+            <ListView ItemsSource="{Binding Path=Files}" AlternationCount="2">
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Header="Name">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=Name}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Size">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=Length}" HorizontalAlignment="Right"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </ScrollViewer>
     </Grid>
 </Window>
