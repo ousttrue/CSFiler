@@ -5,7 +5,7 @@
         Title="Filer" Height="350" Width="525">
     <Window.Resources>
         <DataTemplate DataType="{x:Type IO:DirectoryInfo}">
-            <Label Content="{Binding Path=Name}"  Foreground="#FF2222"/>
+            <Label Content="{Binding Path=Name}"  Foreground="#FF2222" Cursor="Hand"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type IO:FileInfo}">
             <StackPanel Orientation="Horizontal">
@@ -19,9 +19,16 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" Name="currentFolder" Text="{Binding Path=Path}" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Name="currentFolder" Text="{Binding Path=Path}" />
+            <Button Grid.Column="1" Name="goParent" Width="30" Content=".." Click="goParent_Click" Cursor="Hand"/>
+        </Grid>
         <ScrollViewer Grid.Row="1" >
-            <ListBox x:Name="currentFolderFiles" ItemsSource="{Binding Path=Files}">
+            <ListBox Name="currentFolderFiles" ItemsSource="{Binding Path=Files}" HorizontalContentAlignment="Stretch">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
                         <EventSetter Event="MouseDoubleClick" Handler="listBoxItem_DoubleClick" />

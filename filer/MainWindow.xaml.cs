@@ -45,5 +45,14 @@ namespace filer
             }
 
         }
+
+        private void goParent_Click(object sender, RoutedEventArgs e)
+        {
+            if (fileView_.Current.Parent != null)
+            {
+                fileView_.Current = fileView_.Current.Parent;
+            }
+        }
+
     }
 }

@@ -28,14 +28,21 @@ namespace filer
                 current_ = value;
                 NotifyPropertyChanged("Current");
                 NotifyPropertyChanged("Path");
-                /*
-                files_ = new ObservableCollection<FileSystemInfo>(
-                current_.GetFileSystemInfos().ToArray());
-                 */
                 files_.Clear();
-                foreach (var e in current_.GetFileSystemInfos())
+                try
                 {
-                    files_.Add(e);
+                    foreach (var e in current_.GetFileSystemInfos())
+                    {
+                        files_.Add(e);
+                    }
+                }
+                catch (UnauthorizedAccessException e)
+                {
+                    // do nothing
+                }
+                catch (DirectoryNotFoundException e)
+                {
+                    // do nothing
                 }
             }
         }
