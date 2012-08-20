@@ -21,7 +21,12 @@
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0" Name="currentFolder" Text="{Binding Path=Path}" />
         <ScrollViewer Grid.Row="1" >
-            <ListBox Name="currentFolderFiles" ItemsSource="{Binding Path=Files}">
+            <ListBox x:Name="currentFolderFiles" ItemsSource="{Binding Path=Files}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="listBoxItem_DoubleClick" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </ListBox>
         </ScrollViewer>
     </Grid>

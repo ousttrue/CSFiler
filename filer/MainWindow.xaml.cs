@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace filer
 {
@@ -19,11 +20,30 @@ namespace filer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private FileView fileView_ = new FileView("C:\\");
+
         public MainWindow()
         {
             InitializeComponent();
 
-            DataContext=new FileView("C:\\");
+            DataContext=fileView_;
+        }
+
+        private void listBoxItem_DoubleClick(object sender, MouseButtonEventArgs args)
+        {
+            var item = sender as ListBoxItem;
+            var directory = item.Content as DirectoryInfo;
+            if (directory != null)
+            {
+                fileView_.Current=directory;
+                return;
+            }
+            var file = item.Content as FileInfo;
+            if(file != null)
+            {
+                return;
+            }
+
         }
     }
 }

@@ -20,15 +20,32 @@ namespace filer
         }
 
         private DirectoryInfo current_;
-        public String Path
+        public DirectoryInfo Current
+        {
+            get { return current_; }
+            set
+            {
+                current_ = value;
+                NotifyPropertyChanged("Current");
+                NotifyPropertyChanged("Path");
+                /*
+                files_ = new ObservableCollection<FileSystemInfo>(
+                current_.GetFileSystemInfos().ToArray());
+                 */
+                files_.Clear();
+                foreach (var e in current_.GetFileSystemInfos())
+                {
+                    files_.Add(e);
+                }
+            }
+        }
+
+        public string Path
         {
             get { return current_.FullName; }
             set
             {
-                current_ = new DirectoryInfo(value);
-                NotifyPropertyChanged("Path");
-                files_ = new ObservableCollection<FileSystemInfo>(
-                current_.GetFileSystemInfos().ToArray());
+                Current = new DirectoryInfo(value);
             }
         }
 
@@ -40,7 +57,7 @@ namespace filer
 
         public FileView(String path)
         {
-            Path = path;
+            Current = new DirectoryInfo(path);
         }
     }
 }
