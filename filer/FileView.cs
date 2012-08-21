@@ -8,6 +8,42 @@ using System.IO;
 
 namespace filer
 {
+    class Item
+    {
+        public bool IsDirectory
+        {
+            set;
+            get;
+        }
+
+        public FileSystemInfo Info
+        {
+            set;
+            get;
+        }
+
+        public String Name
+        {
+            get { return Info.Name; }
+        }
+
+        public String Length
+        {
+            get
+            {
+                var file = Info as FileInfo;
+                if (file == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return file.Length.ToString();
+                }
+            }
+        }
+    };
+
     class FileView : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -33,7 +69,11 @@ namespace filer
                 {
                     foreach (var e in current_.GetFileSystemInfos())
                     {
-                        files_.Add(e);
+                        files_.Add(new Item
+                        {
+                            IsDirectory = (e is DirectoryInfo),
+                            Info = e
+                        });
                     }
                 }
                 catch (UnauthorizedAccessException e)
@@ -56,10 +96,10 @@ namespace filer
             }
         }
 
-        private ObservableCollection<FileSystemInfo> files_ = new ObservableCollection<FileSystemInfo>();
-        public ReadOnlyObservableCollection<FileSystemInfo> Files
+        private ObservableCollection<Item> files_ = new ObservableCollection<Item>();
+        public ReadOnlyObservableCollection<Item> Files
         {
-            get { return new ReadOnlyObservableCollection<FileSystemInfo>(files_); }
+            get { return new ReadOnlyObservableCollection<Item>(files_); }
         }
 
         public FileView(String path)

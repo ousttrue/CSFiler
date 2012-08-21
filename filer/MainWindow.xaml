@@ -4,10 +4,6 @@
         xmlns:IO="clr-namespace:System.IO;assembly=mscorlib"
         Title="Filer" Height="350" Width="525">
     <Window.Resources>
-        <Style TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <EventSetter Event="MouseDoubleClick" Handler="listBoxItem_DoubleClick"/>
-        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -44,6 +40,12 @@
                         </GridView.Columns>
                     </GridView>
                 </ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}"  >
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <EventSetter Event="MouseDoubleClick" Handler="listBoxItem_DoubleClick"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
             </ListView>
         </ScrollViewer>
     </Grid>

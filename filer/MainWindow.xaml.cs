@@ -31,19 +31,20 @@ namespace filer
 
         private void listBoxItem_DoubleClick(object sender, MouseButtonEventArgs args)
         {
-            var item = sender as ListBoxItem;
-            var directory = item.Content as DirectoryInfo;
+            var listItem = sender as ListBoxItem;
+            var item = listItem.Content as Item;
+            var directory = item.Info as DirectoryInfo;
             if (directory != null)
             {
                 fileView_.Current=directory;
                 return;
             }
-            var file = item.Content as FileInfo;
+            var file = item.Info as FileInfo;
             if(file != null)
             {
+                // todo: fileの実行
                 return;
             }
-
         }
 
         private void goParent_Click(object sender, RoutedEventArgs args)
