@@ -5,9 +5,17 @@ using System.Text;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using System.Windows;
+
 
 namespace filer
 {
+
+
     class Item
     {
         public bool IsDirectory
@@ -40,6 +48,20 @@ namespace filer
                 {
                     return file.Length.ToString();
                 }
+            }
+        }
+
+        public BitmapSource Bitmap
+        {
+            get
+            {
+                SHFILEINFO shinfo = new SHFILEINFO();
+                var hImgLarge = Win32.SHGetFileInfo(Info.FullName, 0,
+                    ref shinfo, (uint)Marshal.SizeOf(shinfo),
+                    Win32.SHGFI_ICON | Win32.SHGFI_LARGEICON);
+                BitmapSource source = Imaging.CreateBitmapSourceFromHIcon(shinfo.hIcon, Int32Rect.Empty, null);
+                Win32.DestroyIcon(shinfo.hIcon);
+                return source;
             }
         }
     };
