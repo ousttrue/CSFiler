@@ -20,13 +20,13 @@ namespace filer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private FileView fileView_ = new FileView("C:\\");
+        private FileView fileView_;
 
         public MainWindow()
         {
             InitializeComponent();
-
-            DataContext=fileView_;
+            fileView_=new FileView("C:\\", Dispatcher);
+            DataContext = fileView_;
         }
 
         private void listBoxItem_DoubleClick(object sender, MouseButtonEventArgs args)

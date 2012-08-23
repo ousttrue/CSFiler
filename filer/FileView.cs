@@ -12,6 +12,7 @@ using System.Windows.Interop;
 using System.Windows;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 
 namespace filer
@@ -87,14 +88,13 @@ namespace filer
                 NotifyPropertyChanged("Bitmap");
             };
             dispatcher.Invoke(action);
-
         }
     };
 
 
     class FileView : INotifyPropertyChanged
     {
-        public Dispatcher EventDispatcher { get; set; }
+        public Dispatcher dispatcher_;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName = "")
@@ -105,10 +105,10 @@ namespace filer
             }
         }
 
-        BackgroundWorker backgroundWorker_;
-        public FileView()
+        public FileView(String path, Dispatcher dispatcher)
         {
-            backgroundWorker_ = new BackgroundWorker();
+            dispatcher_ = dispatcher;
+            Current = new DirectoryInfo(path);
         }
 
         private DirectoryInfo current_;
@@ -144,7 +144,7 @@ namespace filer
                     {
                         foreach (var item in workList)
                         {
-                            item.LoadBitmap(EventDispatcher);
+                            item.LoadBitmap(dispatcher_);
                         }
                     });
                     task.Start();
@@ -173,11 +173,6 @@ namespace filer
         public ReadOnlyObservableCollection<Item> Files
         {
             get { return new ReadOnlyObservableCollection<Item>(files_); }
-        }
-
-        public FileView(String path)
-        {
-            Current = new DirectoryInfo(path);
         }
     }
 }
