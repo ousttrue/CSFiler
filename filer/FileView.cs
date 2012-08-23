@@ -160,12 +160,6 @@ namespace filer
             }
         }
 
-
-            
-
-
-
-
         public string Path
         {
             get { return current_.FullName; }
