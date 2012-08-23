@@ -129,11 +129,6 @@ namespace filer
                     }
 
                     // 別スレッドでビットマップ更新を呼び出す
-                    Action<int, Item> onChange = (int i, Item item) =>
-                    {
-                        files_.RemoveAt(i);
-                        files_.Insert(i, item);
-                    };
                     var task = new Task(() =>
                     {
                         foreach (var item in workList)
