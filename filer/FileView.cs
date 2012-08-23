@@ -60,6 +60,11 @@ namespace filer
         private BitmapSource bitmap_;
         public BitmapSource Bitmap
         {
+            set
+            {
+                bitmap_ = value;
+                NotifyPropertyChanged("Bitmap");
+            }
             get
             {
                 return bitmap_;
@@ -67,28 +72,6 @@ namespace filer
             }
         }
 
-        public void LoadBitmap(Dispatcher dispatcher)
-        {
-            SHFILEINFO shinfo = new SHFILEINFO();
-            var hImgLarge = Win32.SHGetFileInfo(Info.FullName, 0,
-                ref shinfo, (uint)Marshal.SizeOf(shinfo),
-                Win32.SHGFI_ICON | Win32.SHGFI_LARGEICON);
-            BitmapSource source = Imaging.CreateBitmapSourceFromHIcon(shinfo.hIcon, Int32Rect.Empty, null);
-            // for thread
-            source.Freeze();
-            Win32.DestroyIcon(shinfo.hIcon);
-            bitmap_=source;
-
-            if (dispatcher == null)
-            {
-                return;
-            }
-            Action action = () =>
-            {
-                NotifyPropertyChanged("Bitmap");
-            };
-            dispatcher.Invoke(action);
-        }
     };
 
 
@@ -109,6 +92,17 @@ namespace filer
         {
             dispatcher_ = dispatcher;
             Current = new DirectoryInfo(path);
+        }
+
+        private BitmapSource LoadBitmapSource(FileSystemInfo info)
+        {
+            SHFILEINFO shinfo = new SHFILEINFO();
+            var hImgLarge = Win32.SHGetFileInfo(info.FullName, 0,
+                ref shinfo, (uint)Marshal.SizeOf(shinfo),
+                Win32.SHGFI_ICON | Win32.SHGFI_LARGEICON);
+            BitmapSource source = Imaging.CreateBitmapSourceFromHIcon(shinfo.hIcon, Int32Rect.Empty, null);
+            Win32.DestroyIcon(shinfo.hIcon);
+            return source;
         }
 
         private DirectoryInfo current_;
@@ -140,11 +134,17 @@ namespace filer
                         files_.RemoveAt(i);
                         files_.Insert(i, item);
                     };
-                    var task=new Task(() =>
+                    var task = new Task(() =>
                     {
                         foreach (var item in workList)
                         {
-                            item.LoadBitmap(dispatcher_);
+                            var source = LoadBitmapSource(item.Info);
+                            source.Freeze();
+                            Action action = () =>
+                            {
+                                item.Bitmap = source;
+                            };
+                            dispatcher_.Invoke(action);
                         }
                     });
                     task.Start();
@@ -159,6 +159,12 @@ namespace filer
                 }
             }
         }
+
+
+            
+
+
+
 
         public string Path
         {
