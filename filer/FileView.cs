@@ -10,18 +10,23 @@ using System.Windows.Media.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 
 
 namespace filer
 {
 
 
-    class Item
+    class Item : INotifyPropertyChanged
     {
-        public bool IsDirectory
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName = "")
         {
-            set;
-            get;
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public FileSystemInfo Info
@@ -51,23 +56,46 @@ namespace filer
             }
         }
 
+        private BitmapSource bitmap_;
         public BitmapSource Bitmap
         {
             get
             {
-                SHFILEINFO shinfo = new SHFILEINFO();
-                var hImgLarge = Win32.SHGetFileInfo(Info.FullName, 0,
-                    ref shinfo, (uint)Marshal.SizeOf(shinfo),
-                    Win32.SHGFI_ICON | Win32.SHGFI_LARGEICON);
-                BitmapSource source = Imaging.CreateBitmapSourceFromHIcon(shinfo.hIcon, Int32Rect.Empty, null);
-                Win32.DestroyIcon(shinfo.hIcon);
-                return source;
+                return bitmap_;
+
             }
+        }
+
+        public void LoadBitmap(Dispatcher dispatcher)
+        {
+            SHFILEINFO shinfo = new SHFILEINFO();
+            var hImgLarge = Win32.SHGetFileInfo(Info.FullName, 0,
+                ref shinfo, (uint)Marshal.SizeOf(shinfo),
+                Win32.SHGFI_ICON | Win32.SHGFI_LARGEICON);
+            BitmapSource source = Imaging.CreateBitmapSourceFromHIcon(shinfo.hIcon, Int32Rect.Empty, null);
+            // for thread
+            source.Freeze();
+            Win32.DestroyIcon(shinfo.hIcon);
+            bitmap_=source;
+
+            if (dispatcher == null)
+            {
+                return;
+            }
+            Action action = () =>
+            {
+                NotifyPropertyChanged("Bitmap");
+            };
+            dispatcher.Invoke(action);
+
         }
     };
 
+
     class FileView : INotifyPropertyChanged
     {
+        public Dispatcher EventDispatcher { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged(String propertyName = "")
         {
@@ -75,6 +103,12 @@ namespace filer
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        BackgroundWorker backgroundWorker_;
+        public FileView()
+        {
+            backgroundWorker_ = new BackgroundWorker();
         }
 
         private DirectoryInfo current_;
@@ -87,16 +121,33 @@ namespace filer
                 NotifyPropertyChanged("Current");
                 NotifyPropertyChanged("Path");
                 files_.Clear();
+                var workList=new List<Item>();
                 try
                 {
                     foreach (var e in current_.GetFileSystemInfos())
                     {
-                        files_.Add(new Item
+                        var item=new Item
                         {
-                            IsDirectory = (e is DirectoryInfo),
                             Info = e
-                        });
+                        };
+                        files_.Add(item);
+                        workList.Add(item);
                     }
+
+                    // 別スレッドでビットマップ更新を呼び出す
+                    Action<int, Item> onChange = (int i, Item item) =>
+                    {
+                        files_.RemoveAt(i);
+                        files_.Insert(i, item);
+                    };
+                    var task=new Task(() =>
+                    {
+                        foreach (var item in workList)
+                        {
+                            item.LoadBitmap(EventDispatcher);
+                        }
+                    });
+                    task.Start();
                 }
                 catch (UnauthorizedAccessException e)
                 {
