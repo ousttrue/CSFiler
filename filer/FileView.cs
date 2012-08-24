@@ -114,6 +114,7 @@ namespace filer
                 current_ = value;
                 NotifyPropertyChanged("Current");
                 NotifyPropertyChanged("Path");
+                NotifyPropertyChanged("Status");
                 files_.Clear();
                 var workList=new List<Item>();
                 try
@@ -168,6 +169,14 @@ namespace filer
         public ReadOnlyObservableCollection<Item> Files
         {
             get { return new ReadOnlyObservableCollection<Item>(files_); }
+        }
+
+        public String Status
+        {
+            get
+            {
+                return String.Format("{0} entries", files_.Count);
+            }
         }
     }
 }

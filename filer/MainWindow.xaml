@@ -10,6 +10,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -59,5 +60,11 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
+        <DockPanel Name="DockPanel1" Grid.Row="3">
+            <StatusBar>
+                <StatusBarItem DockPanel.Dock="Right" Content="{Binding Path=Status}" />
+                <StatusBarItem></StatusBarItem>
+            </StatusBar>
+        </DockPanel>
     </Grid>
 </Window>
