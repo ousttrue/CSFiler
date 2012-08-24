@@ -55,5 +55,10 @@ namespace filer
             }
         }
 
+        private void go_home_Click(object sender, RoutedEventArgs e)
+        {
+            fileView_.Path = System.Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        }
+
     }
 }

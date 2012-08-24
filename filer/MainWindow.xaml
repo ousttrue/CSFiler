@@ -8,9 +8,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid>
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -18,8 +19,12 @@
             <TextBox Grid.Column="0" Name="currentFolder" Text="{Binding Path=Path}" />
             <Button Grid.Column="1" Name="goParent" Width="30" Content=".." Click="goParent_Click" Cursor="Hand"/>
         </Grid>
-
-        <ListView Grid.Row="1" ItemsSource="{Binding Path=Files}" AlternationCount="2">
+        <ToolBar Grid.Row="1">
+            <Button Name="go_home" Click="go_home_Click">
+                <Image Source="Images/user-home.png" Width="32" Height="32" /> 
+            </Button>
+        </ToolBar>
+        <ListView Grid.Row="2" ItemsSource="{Binding Path=Files}" AlternationCount="2">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
@@ -54,6 +59,5 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-
     </Grid>
 </Window>
