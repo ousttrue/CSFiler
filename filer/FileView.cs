@@ -114,7 +114,6 @@ namespace filer
                 current_ = value;
                 NotifyPropertyChanged("Current");
                 NotifyPropertyChanged("Path");
-                NotifyPropertyChanged("Status");
                 files_.Clear();
                 var workList=new List<Item>();
                 try
@@ -128,6 +127,7 @@ namespace filer
                         files_.Add(item);
                         workList.Add(item);
                     }
+                    NotifyPropertyChanged("Status");
 
                     // 別スレッドでビットマップ更新を呼び出す
                     var task = new Task(() =>
