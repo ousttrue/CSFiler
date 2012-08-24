@@ -56,7 +56,7 @@
                     <Style.Triggers>
                         <!-- 奇数行だけ -->
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                            <Setter Property="Background" Value="#EEE" />
+                            <Setter Property="Background" Value="#F8F8F8" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
