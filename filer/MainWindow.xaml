@@ -12,17 +12,13 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Name="currentFolder" Text="{Binding Path=Path}" />
-            <Button Grid.Column="1" Name="goParent" Width="30" Content=".." Click="goParent_Click" Cursor="Hand"/>
-        </Grid>
+        <TextBox Grid.Row="0" Name="currentFolder" Text="{Binding Path=Path}" />
         <ToolBar Grid.Row="1">
-            <Button Name="go_home" Click="go_home_Click">
-                <Image Source="Images/user-home.png" Width="32" Height="32" /> 
+            <Button Name="goParent" Click="goParent_Click" Cursor="Hand">
+                <Image Source="Images/go-up.png" />
+            </Button>
+            <Button Name="go_home" Click="go_home_Click" Cursor="Hand">
+                <Image Source="Images/user-home.png" /> 
             </Button>
         </ToolBar>
         <ListView Grid.Row="2" ItemsSource="{Binding Path=Files}" AlternationCount="2">
