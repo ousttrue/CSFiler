@@ -53,6 +53,12 @@
                 <Style TargetType="{x:Type ListViewItem}"  >
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <EventSetter Event="MouseDoubleClick" Handler="listBoxItem_DoubleClick"/>
+                    <Style.Triggers>
+                        <!-- 奇数行だけ -->
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                            <Setter Property="Background" Value="#EEE" />
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
